@@ -13,17 +13,17 @@ import java.util.StringTokenizer;
 
 public class JavaHTTPServer implements Runnable{ 
 	
-	static final File WEB_ROOT = new File("C:/caminho/do/meu/site");
+	static final File WEB_ROOT = new File("C:/colocar/caminho/dos/arquivos/do/site");
 	static final String DEFAULT_FILE = "pagina_1.html";
 	static final String FILE_NOT_FOUND = "404.html";
 	static final String METHOD_NOT_SUPPORTED = "menu.html";
-	// porta para conex„o
+	// porta para conex√£o
 	static final int PORT = 8080;
 	
 	// variavel VER mostra o que esta sendo retornado
 	static final boolean ver = true;
 	
-	// Conex„o com o cliente via Socket
+	// Conex√£o com o cliente via Socket
 	private Socket connect;
 	
 	public JavaHTTPServer(Socket c) {
@@ -33,49 +33,49 @@ public class JavaHTTPServer implements Runnable{
 	public static void main(String[] args) {
 		try {
 			ServerSocket serverConnect = new ServerSocket(PORT);
-			System.out.println("Server started.\nListando as conexıes na porta : " + PORT + " ...\n");
+			System.out.println("Server started.\nListando as conex√µes na porta : " + PORT + " ...\n");
 			
-			// fica escudando a conex„o do servidor
+			// fica escudando a conex√£o do servidor
 			while (true) {
 				JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
 				
 				if (ver) {
-					System.out.println("Connecton opened.");//variavel para exibiÁ„o no  servidor com status da conexao
+					System.out.println("Connecton opened.");//variavel para exibi√ß√£o no  servidor com status da conexao
 				}
 				
-				// criar a tread e a conex„o do cliente
+				// criar a tread e a conex√£o do cliente
 				Thread thread = new Thread(myServer);
 				thread.start();
 			}
 			
 		} catch (IOException e) {
-			System.err.println("Erro na coneÁ„o com o servidor : " + e.getMessage());
+			System.err.println("Erro na cone√ß√£o com o servidor : " + e.getMessage());
 		}
 	}
 
 	@Override
 	public void run() {
-		//gerencia a conex„o particular com o cliente
+		//gerencia a conex√£o particular com o cliente
 		BufferedReader in = null; PrintWriter out = null; BufferedOutputStream dataOut = null;
 		String fileRequested = null;
 		
 		try {
 			// lemos os caracteres do cliente via fluxo de entrada no socket
 			in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-			// obtem o fluxo de saÌda de caractere para o cliente (para cabeÁalhos)
+			// obtem o fluxo de sa√≠da de caractere para o cliente (para cabe√ßalhos)
 			out = new PrintWriter(connect.getOutputStream());
-			// obter fluxo de saÌda bin·ria para o cliente (para dados solicitados)
+			// obter fluxo de sa√≠da bin√°ria para o cliente (para dados solicitados)
 			dataOut = new BufferedOutputStream(connect.getOutputStream());
 			
 			// obter a primeira linha do pedido do cliente
 			String input = in.readLine();
-			// analisa a solicitaÁ„o com uma string
+			// analisa a solicita√ß√£o com uma string
 			StringTokenizer parse = new StringTokenizer(input);
-			String method = parse.nextToken().toUpperCase(); //obtemos o mÈtodo HTTP do cliente
+			String method = parse.nextToken().toUpperCase(); //obtemos o m√©todo HTTP do cliente
 			// receber o arquivo solicitado
 			fileRequested = parse.nextToken().toLowerCase();
 			
-			// apenas os mÈtodos GET sera utilizado
+			// apenas os m√©todos GET sera utilizado
 			if (!method.equals("GET")) {
 				if (ver) {
 					System.out.println("501 Not Implemented : " + method + " method.");
@@ -85,16 +85,16 @@ public class JavaHTTPServer implements Runnable{
 				File file = new File(WEB_ROOT, METHOD_NOT_SUPPORTED);
 				int fileLength = (int) file.length();
 				String contentMimeType = "text/html";
-				//conte˙do que retorna para a cliente
+				//conte√∫do que retorna para a cliente
 				byte[] fileData = readFileData(file, fileLength);
 					
-				// cabeÁalhos HTTP com dados para o cliente
+				// cabe√ßalhos HTTP com dados para o cliente
 				out.println("HTTP/1.1 501 Not Implemented");
 				out.println("Server: Java HTTP Server from SSaurel : 1.0");
 				out.println("Content-type: " + contentMimeType);
 				out.println("Content-length: " + fileLength);
-				out.println(); //linha entre cabeÁalhos e conte˙do, muito importante!
-				out.flush(); // liberar buffer de fluxo de saÌda de caractere
+				out.println(); //linha entre cabe√ßalhos e conte√∫do, muito importante!
+				out.flush(); // liberar buffer de fluxo de sa√≠da de caractere
 				// arquivo
 				dataOut.write(fileData, 0, fileLength);
 				dataOut.flush();
@@ -109,16 +109,16 @@ public class JavaHTTPServer implements Runnable{
 				int fileLength = (int) file.length();
 				String content = getContentType(fileRequested);
 				
-				if (method.equals("GET")) { //metodo GET retorno do conte˙do
+				if (method.equals("GET")) { //metodo GET retorno do conte√∫do
 					byte[] fileData = readFileData(file, fileLength);
 					
-					//envio do cabeÁalho HTTP
+					//envio do cabe√ßalho HTTP
 					out.println("HTTP/1.1 200 OK");
 					out.println("Server: Java HTTP Server from SSaurel : 1.0");
 					out.println("Content-type: " + content);
 					out.println("Content-length: " + fileLength);
-					out.println(); // linha entre cabeÁalhos e conte˙do, muito importante!
-					out.flush(); // liberar buffer de fluxo de saÌda de caractere
+					out.println(); // linha entre cabe√ßalhos e conte√∫do, muito importante!
+					out.flush(); // liberar buffer de fluxo de sa√≠da de caractere
 					
 					dataOut.write(fileData, 0, fileLength);
 					dataOut.flush();
@@ -134,7 +134,7 @@ public class JavaHTTPServer implements Runnable{
 			try {
 				fileNotFound(out, dataOut, fileRequested);
 			} catch (IOException ioe) {
-				System.err.println("Erro arquivo n„o encontrado : " + ioe.getMessage());
+				System.err.println("Erro arquivo n√£o encontrado : " + ioe.getMessage());
 			}
 			
 		} catch (IOException ioe) {
@@ -144,7 +144,7 @@ public class JavaHTTPServer implements Runnable{
 				in.close();
 				out.close();
 				dataOut.close();
-				connect.close(); // fecha a conex„o socket
+				connect.close(); // fecha a conex√£o socket
 			} catch (Exception e) {
 				System.err.println("Error closing stream : " + e.getMessage());
 			} 			
@@ -184,8 +184,8 @@ public class JavaHTTPServer implements Runnable{
 		out.println("Server: Java HTTP Server from SSaurel : 1.0");
 		out.println("Content-type: " + content);
 		out.println("Content-length: " + fileLength);
-		out.println(); //linha em branco entre cabeÁalho!
-		out.flush(); //  fluxo de saÌda de caractere
+		out.println(); //linha em branco entre cabe√ßalho!
+		out.flush(); //  fluxo de sa√≠da de caractere
 		
 		dataOut.write(fileData, 0, fileLength);
 		dataOut.flush();
